@@ -1,14 +1,24 @@
-const http = require('http');
+const express = require('express');
 
 const hostname = '127.0.0.1';
 const port = 3000;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello, World!\n');
+// Create Express application instance
+const app = express();
+
+// Define route for root endpoint - returns "Hello world" (as specified)
+app.get('/', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send('Hello world');
 });
 
-server.listen(port, hostname, () => {
+// Define route for evening endpoint - returns "Good evening"
+app.get('/evening', (req, res) => {
+  res.set('Content-Type', 'text/plain');
+  res.send('Good evening');
+});
+
+// Start server using Express listen method
+app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
