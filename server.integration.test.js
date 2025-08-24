@@ -55,6 +55,7 @@ describe('Server.js Integration Tests', () => {
       
       let serverOutput = '';
       let serverReady = false;
+      let startupTimeout = null;
       
       // Listen for server startup confirmation
       serverProcess.stdout.on('data', (data) => {
@@ -63,6 +64,13 @@ describe('Server.js Integration Tests', () => {
         // Server is ready when it logs the "running at" message
         if (serverOutput.includes('Server running at') && !serverReady) {
           serverReady = true;
+          
+          // Clear timeout since server started successfully
+          if (startupTimeout) {
+            clearTimeout(startupTimeout);
+            startupTimeout = null;
+          }
+          
           resolve({
             process: serverProcess,
             output: serverOutput
@@ -78,6 +86,10 @@ describe('Server.js Integration Tests', () => {
       // Handle process exit during startup
       serverProcess.on('exit', (code, signal) => {
         if (!serverReady) {
+          if (startupTimeout) {
+            clearTimeout(startupTimeout);
+            startupTimeout = null;
+          }
           reject(new Error(`Server process exited during startup with code ${code}, signal ${signal}`));
         }
       });
@@ -85,13 +97,18 @@ describe('Server.js Integration Tests', () => {
       // Handle process errors
       serverProcess.on('error', (error) => {
         if (!serverReady) {
+          if (startupTimeout) {
+            clearTimeout(startupTimeout);
+            startupTimeout = null;
+          }
           reject(new Error(`Failed to start server process: ${error.message}`));
         }
       });
       
       // Timeout after 10 seconds if server doesn't start
-      setTimeout(() => {
+      startupTimeout = setTimeout(() => {
         if (!serverReady) {
+          startupTimeout = null;
           reject(new Error('Server startup timeout after 10 seconds'));
         }
       }, 10000);
@@ -110,11 +127,19 @@ describe('Server.js Integration Tests', () => {
       }
       
       let cleanupComplete = false;
+      let forceKillTimeout = null;
       
       // Handle process exit
       serverProcess.on('exit', () => {
         if (!cleanupComplete) {
           cleanupComplete = true;
+          
+          // Clear force kill timeout since process exited gracefully
+          if (forceKillTimeout) {
+            clearTimeout(forceKillTimeout);
+            forceKillTimeout = null;
+          }
+          
           serverProcess = null;
           resolve();
         }
@@ -124,10 +149,11 @@ describe('Server.js Integration Tests', () => {
       serverProcess.kill('SIGTERM');
       
       // Force kill after 5 seconds if graceful shutdown fails
-      setTimeout(() => {
+      forceKillTimeout = setTimeout(() => {
         if (!cleanupComplete && serverProcess) {
           serverProcess.kill('SIGKILL');
           cleanupComplete = true;
+          forceKillTimeout = null;
           serverProcess = null;
           resolve();
         }
