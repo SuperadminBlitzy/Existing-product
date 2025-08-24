@@ -7,5 +7,12 @@
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "hxu",
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "express": "4.21.2",
+        "helmet": "7.2.0",
+        "express-rate-limit": "7.5.0",
+        "cors": "2.8.5",
+        "express-validator": "7.2.0"
+    }
 }

@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# SSL Certificates (security) - exclude cert files but allow .gitignore
+cert/*.key
+cert/*.cert
+cert/*.pem
+cert/*.crt
+cert/*.csr
+cert/*.p12
+cert/*.pfx
+cert/*.jks
+cert/*.keystore
+cert/*.conf
+cert/ca.*
+cert/privkey*.pem
+cert/fullchain*.pem
+cert/chain*.pem
+cert/cert*.pem
+cert/*.tmp
+cert/*.temp
+cert/*.bak
+cert/*.backup
+cert/*.log
+
+# Temporary test files
+blitzy_adhoc_test_*
+
+# Runtime logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

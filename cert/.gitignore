@@ -1,0 +1,44 @@
+# SSL/TLS Certificate Files
+# Exclude all certificate-related files from version control
+# These files contain sensitive security credentials and should remain
+# environment-specific for security compliance
+
+# Private Keys - Contains sensitive cryptographic material
+*.key
+*.pem
+
+# Certificates - Public certificates but environment-specific
+*.cert
+*.crt
+
+# Certificate Signing Requests
+*.csr
+
+# Additional certificate formats
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# OpenSSL configuration files that may contain sensitive data
+*.conf
+
+# Certificate Authority files
+ca.*
+
+# Let's Encrypt certificates
+privkey*.pem
+fullchain*.pem
+chain*.pem
+cert*.pem
+
+# Temporary certificate files
+*.tmp
+*.temp
+
+# Backup certificate files
+*.bak
+*.backup
+
+# Certificate-related logs
+*.log
